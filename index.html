@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金徽对话录</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600&display=swap');
+
+        :root {
+            --bg-color: #F5F0E6;
+            --paper-color: #FAF8F3;
+            --ink-color: #2C2C2C;
+            --light-ink: #5A5A5A;
+            --accent-color: #C94C4C;
+            --subtle-border: #E8E0D0;
+            --cinnabar: #B83B3B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+            background: var(--bg-color);
+            color: var(--ink-color);
+            line-height: 1.9;
+            letter-spacing: 0.05em;
+        }
+
+        .scroll-top {
+            height: 60px;
+            background: linear-gradient(to bottom, #D4C4A8, var(--bg-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scroll-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 30px 120px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px 0 60px;
+            position: relative;
+        }
+
+        .header-seal {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--cinnabar);
+            border-radius: 4px;
+            margin: 0 auto 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--cinnabar);
+            line-height: 1.2;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--ink-color);
+            margin-bottom: 12px;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            color: var(--light-ink);
+        }
+
+        .chapter-card {
+            margin-bottom: 20px;
+        }
+
+        .chapter-header {
+            background: var(--paper-color);
+            padding: 24px 30px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .chapter-header:hover {
+            border-color: var(--subtle-border);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+        }
+
+        .chapter-header.expanded {
+            border-bottom: none;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .chapter-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .chapter-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            border: 1px solid var(--subtle-border);
+            border-radius: 50%;
+            font-size: 13px;
+            color: var(--light-ink);
+        }
+
+        .chapter-date {
+            font-size: 11px;
+            color: #8B7355;
+            letter-spacing: 0.1em;
+        }
+
+        .chapter-title {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--ink-color);
+            margin-bottom: 12px;
+        }
+
+        .chapter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 10px;
+            color: #6B6B6B;
+            background: transparent;
+            padding: 3px 10px;
+            border: 1px solid var(--subtle-border);
+            border-radius: 20px;
+        }
+
+        .expand-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: var(--subtle-border);
+            transition: transform 0.3s ease;
+        }
+
+        .chapter-header.expanded .expand-icon {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .chapter-content {
+            display: none;
+            background: var(--paper-color);
+            padding: 40px 40px 50px;
+            border-radius: 0 0 2px 2px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.02);
+            animation: slideDown 0.3s ease;
+        }
+
+        .chapter-content.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chapter-content h2 {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--ink-color);
+            margin: 40px 0 24px;
+            padding-left: 16px;
+            border-left: 2px solid var(--accent-color);
+        }
+
+        .chapter-content h3 {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--ink-color);
+            margin: 32px 0 16px;
+        }
+
+        .chapter-content p {
+            font-size: 15px;
+            line-height: 2;
+            margin-bottom: 24px;
+            text-align: justify;
+            color: var(--light-ink);
+        }
+
+        .chapter-content strong {
+            font-weight: 500;
+            color: var(--ink-color);
+        }
+
+        .quote-block {
+            padding: 24px 0;
+            margin: 32px 0;
+            border-top: 1px solid var(--subtle-border);
+            border-bottom: 1px solid var(--subtle-border);
+            text-align: center;
+        }
+
+        .quote-block p {
+            font-size: 16px;
+            color: var(--ink-color);
+            margin: 0;
+        }
+
+        .divider {
+            text-align: center;
+            color: var(--subtle-border);
+            font-size: 12px;
+            margin: 60px 0;
+            letter-spacing: 8px;
+        }
+
+        .scroll-bottom {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .scroll-bottom-seal {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+            border: 2px solid #8B7355;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #8B7355;
+            letter-spacing: 0.1em;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 26px;
+            }
+            .chapter-content {
+                padding: 30px 25px;
+            }
+            .scroll-container {
+                padding: 30px 20px 100px;
+            }
+            .chapter-header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-top"></div>
+
+    <div class="scroll-container">
+        <header class="header">
+            <div class="header-seal">金徽</div>
+            <h1>对话录</h1>
+            <p class="subtitle">AI工具应用与个人成长</p>
+        </header>
+
+        <div class="chapter-card">
+            <div class="chapter-header expanded" onclick="toggleChapter(0)">
+                <div class="chapter-header-top">
+                    <div class="chapter-number">壹</div>
+                    <div class="chapter-date">二〇二六年六月七日</div>
+                </div>
+                <h2 class="chapter-title">AI整理会议录音经验分享与副业成长讨论</h2>
+                <div class="chapter-tags">
+                    <span class="tag">AI工具</span>
+                    <span class="tag">会议纪要整理</span>
+                    <span class="tag">副业成长</span>
+                </div>
+                <div class="expand-icon">▼</div>
+            </div>
+
+            <div class="chapter-content show" id="content0">
+                <h2>【AI工具】多人大会议录音整理的优化方法</h2>
+                <p>本次交流围绕多人大会议录音整理的AI工具优化方法展开。在职场中，整理领导讲话和多人大会议的录音是一项常见但耗时的工作。使用国内大模型如豆包、Get笔记自带模型、讯飞等工具时，经常面临说话人分割杂乱、核心观点抓取不准、总结方向偏差大等问题。面对八九人参与的会议，对话内容交织复杂，模型往往无法准确理解业务场景和用户需求的总结格式，导致输出结果与预期存在显著差异，手工修正的工作量相当可观。</p>
+                <p>针对这一痛点，可以采取分步骤的优化方法。首先进行<strong>说话人预标注</strong>，先截取对话片段，手动标注部分说话人的姓名，让模型通过学习自动替换剩余的说话人标记，有效解决多人对话识别混乱的问题。其次是<strong>范例学习</strong>，导入2至4篇过往符合要求的领导讲话总结成品作为范例，让模型学习总结的风格、结构和产出格式。第三步是<strong>主题分类约束</strong>，提前梳理会议中高频出现的核心主题，要求模型按照这些固定主题进行分类和梳理总结。最后是<strong>迭代优化</strong>，在优化过程中不要手动修改最终的报告内容，而是专注于优化给模型的提示要求，让模型不断调整以贴近预期。核心原则是优化提示要求比直接手动修改结果效率更高，少量的范例就足以让模型学习到你的需求。</p>
+                <p>在工具选择方面，国内模型推荐<strong>智谱清言</strong>，这是清华大学开发的模型，在处理长对话方面效果相对较好。海外模型则推荐GPT或Codex，由OpenAI出品，使用门槛更低，且支持手机云端控制，相比Cloud Code更容易上手。通过这些优化方法和合适的工具选择，可以大幅提升会议录音整理的效率和准确度。</p>
+
+                <h2>【AI工具】大模型自定义Skill的搭建思路</h2>
+                <p>自定义Skill的作用是将固定重复的工作流程封装为自动化任务，用户只需要触发指令，AI就会自动完成全流程处理，最后仅需人工确认结果。以会议总结自动发布为例，一个完整的Skill流程包含三个步骤：第一步自动调用Get笔记，读取其中的录音转写内容；第二步按照预设的12个固定主题，对内容进行分类整理并生成总结；第三步自动将总结发布到预设的动态网页。</p>
+                <p>在Skill搭建的时间成本方面，从零开始做到能够使用的80分效果只需要半小时，但从80分优化到流畅好用的90分，则可能需要几十小时的精心打磨。核心是不断调整和优化给模型的要求，让模型更准确地理解你的需求。这个过程类似于学习开车：让车辆直直地跑起来相对简单，真正的难点在于繁忙路段的并线、侧方停车等细节技巧，完整完成从出门到停好车的全流程需要反复练习和打磨。</p>
+                <p>自定义Skill的应用场景非常广泛。任何重复规律性的工作都适合封装成自动化流程，例如固定模板的党支部会议记录编写，每个月都需要按照特定要求编写学习内容，这类完全重复、模板固定的工作完全可以交给AI自动完成，节省大量编撰材料的时间。新手在入门时可以考虑使用OpenAI的Codex，相比Cloud Code，Codex的门槛更低，操作相对简单，支持手机云端控制，不需要来回在电脑之间导数据，而Cloud Code的上手难度较高，没有人引导自己摸索会较为困难。</p>
+
+                <h2>【副业成长】AI副业落地的方法论</h2>
+                <p>在AI副业落地方面，核心原则是优先完成0到1的闭环，不要追求一开始就做到完美。0到1是一个重要的里程碑，它标志着你从一个只有主业的人变成了拥有副业能力的人，这是身份的转变。完成0到1之后，从副业收入2000元拓展到20000元就是一个自然的1到N的过程，水到渠成。因此建议先给自己定一个小目标，比如先通过副业赚到2000元，不要一开始就定过高的目标。</p>
+                <p>现代职场人普遍需要副业，原因主要有两点：一是可以增加收入补贴生活；二是上班不开心是普遍现象，很多人选择通过刷短视频来麻醉自己，这其实是一种浪费，不如把业余时间用于发展副业、提升自己，做真正有用的事情。已经知道了方向和工具就必须动手去做，不能一直停留在准备阶段。佛陀第一次弘法时只有五个人听，但这五个人都觉悟了，这是0到1的里程碑，证明方法是可行的，闭环已经跑通，这比后来万人听法的1到N更有意义。</p>
+
+                <h2>【生活心态】焦虑应对与边界原则</h2>
+                <p>在生活心态方面，有效的焦虑应对方法是把注意力放在自己可控的事情上，不要纠结那些无法控制的事情。只要做好当下能做的具体事，比如今天吃什么、准点吃药、早睡等，焦虑自然会减少。很多所谓的教导其实都是正确的废话，说的没错但根本做不到，因此不需要去听，最重要的是活在当下，做自己能做的事。</p>
+                <p>人际关系的边界原则同样重要。不要去控制自己不该控制的事情，即便是亲近的人，你可以表达自己的诉求，但最终决定要让对方自己做。被迫做决定会心不甘情不愿，做不好一定会有怨气，最后会纠缠到你身上。只做好自己的事，把注意力放在自己身上，在这个过程中你自己会越来越有力量。当有情绪的时候，不要停留在情绪里，要去发展实力，哭解决不了问题，成年人要做有用的事情。</p>
+
+                <div class="quote-block">
+                    <p>有情绪的时候就去发展实力，别坐着停在那儿哭鼻子啊没用，大家都是成年人，做有用的事情。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-bottom">
+            <div class="scroll-bottom-seal">待续</div>
+        </div>
+    </div>
+
+    <div class="scroll-top" style="height: 40px; background: linear-gradient(to top, #D4C4A8, var(--bg-color));"></div>
+
+    <script>
+        function toggleChapter(index) {
+            const headers = document.querySelectorAll('.chapter-header');
+            const contents = document.querySelectorAll('.chapter-content');
+            headers[index].classList.toggle('expanded');
+            contents[index].classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
